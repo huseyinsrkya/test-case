@@ -1,0 +1,71 @@
+@page "/note/createorupdate"
+@page "/note/createorupdate/{id:long}"
+
+@attribute [Authorize]
+
+@using NoteAPP.Entity
+@using NoteAPP.Service
+@using NoteAPP.Service
+@using NoteAPP.Data.Enums
+@inject NoteService _service
+@inject AuthenticationStateProvider AuthProvider
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Note @(Id.HasValue ? "Update" : "Add")</h5>
+        <hr/>
+
+        <EditForm Model="Data" OnValidSubmit="HandleSubmit">
+            <DataAnnotationsValidator/>
+            <div class="mb-3 row">
+                <label for="Title" class="col-sm-2 col-form-label">Title</label>
+                <div class="col-sm-10">
+                    <InputText id="Title" @bind-Value="Data.Title" class="form-control" required></InputText>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="Content" class="col-sm-2 col-form-label">Description</label>
+                <div class="col-sm-10">
+                    <InputTextArea id="Content" @bind-Value="Data.Content" class="form-control" rows="6" required></InputTextArea>
+                </div>
+            </div>
+            <hr/>
+            <a href="note" class="btn btn-sm btn-outline-primary p-2 rounded-3">Go Back</a>
+            <button class="btn btn-sm btn-outline-success p-2 rounded-3">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public long? Id { get; set; }
+
+    private NoteEntity Data = new NoteEntity();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            Data = await _service.GetNote((long)Id);
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Id == null)
+        {
+            //userid aldıgın yer
+            var provider = await AuthProvider.GetAuthenticationStateAsync();
+            var userId = provider.User.Claims
+                .First(x => x.Type.Contains(ClaimConsts.nameidentifier.ToString())).Value;
+            Data.UserId = userId;
+            await _service.CreateItem(Data);
+        }
+        else
+        {
+            await _service.UpdateItem(Data, (long)Id);
+        }
+    }
+
+}
