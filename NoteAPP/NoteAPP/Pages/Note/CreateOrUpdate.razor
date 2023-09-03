@@ -60,11 +60,11 @@
             var userId = provider.User.Claims
                 .First(x => x.Type.Contains(ClaimConsts.nameidentifier.ToString())).Value;
             Data.UserId = userId;
-            await _service.CreateItem(Data);
+            await _service.CreateNote(Data);
         }
         else
         {
-            await _service.UpdateItem(Data, (long)Id);
+            await _service.UpdateNote(Data, (long)Id);
         }
     }
 

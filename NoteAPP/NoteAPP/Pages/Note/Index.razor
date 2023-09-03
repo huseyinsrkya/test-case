@@ -66,7 +66,7 @@ else
     private async Task DeleteItem(long id)
     {
         var note = _service.Notes.Where(x => x.Id == id).First();
-        await _service.DeleteItem(id);
+        await _service.DeleteNote(id);
         _service.Notes.Remove(note);
     }
 
