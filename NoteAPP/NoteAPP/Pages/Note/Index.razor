@@ -21,7 +21,7 @@
     </div>
 </div>
 <hr/>
-@if (searchResults == null)
+@if (searchResults.Count < 1)
 {
     <div class="alert alert-primary" role="alert">
         No notes have been created yet.
@@ -34,7 +34,8 @@ else
         <div class="card mb-3 card-style" > 
             <div class="card-body">
                 <h5 class="card-title">@note.Title</h5>
-                <p>@note.Content</p> <h6>@User.Identity.Name</h6>
+                <p>@note.Content</p> 
+                <h6>@User.Identity.Name</h6>
                 <hr/>
                 <a class="btn btn-sm btn-outline-success p-2 rounded-3" href="note/createorupdate/@note.Id">Update</a>
                 <button type="button" class="btn btn-sm btn-outline-danger p-2 rounded-3" @onclick="(() => DeleteItem(note.Id))">Delete</button>

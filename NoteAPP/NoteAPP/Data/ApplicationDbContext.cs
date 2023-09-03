@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        
     }
 
     public DbSet<NoteEntity> Note { get; set; } = default!;
