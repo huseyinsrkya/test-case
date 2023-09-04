@@ -30,19 +30,20 @@ public class NoteService
     }
 
 
-    public async Task<NoteEntity> GetNote(long id)
+    public async Task<NoteEntity> GetNote(long id, string userId)
     {
         var data = await _context.Note
-            .Where(x => x.IsDeleted == false && x.Id == id)
+            .Where(x => x.IsDeleted == false && x.Id == id && x.UserId == userId)
             .FirstOrDefaultAsync();
 
         if (data == null)
         {
-            throw new Exception("No to do Note here. ");
+            throw new Exception("No to do Note here.");
         }
 
         return data;
     }
+
 
     public async Task CreateNote(NoteEntity note)
     {

@@ -9,6 +9,8 @@
 @using NoteAPP.Data.Enums
 @inject NoteService _service
 @inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager _navigationManager
+
 
 <div class="card">
     <div class="card-body">
@@ -45,17 +47,24 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if (Id != null)
+        if (Id.HasValue)
         {
-            Data = await _service.GetNote((long)Id);
+            var provider = await AuthProvider.GetAuthenticationStateAsync();
+            var userId = provider.User.Claims
+                .First(x => x.Type.Contains(ClaimConsts.nameidentifier.ToString())).Value;
+
+            Data.UserId = userId;
+
+            Data = await _service.GetNote((long)Id, userId);
         }
+
     }
+
 
     async Task HandleSubmit()
     {
         if (Id == null)
         {
-            //userid aldıgın yer
             var provider = await AuthProvider.GetAuthenticationStateAsync();
             var userId = provider.User.Claims
                 .First(x => x.Type.Contains(ClaimConsts.nameidentifier.ToString())).Value;
