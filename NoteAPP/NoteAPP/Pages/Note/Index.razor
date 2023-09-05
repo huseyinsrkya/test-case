@@ -55,19 +55,20 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var provider = await AuthProvider.GetAuthenticationStateAsync();
+        var provider = await AuthProvider.GetAuthenticationStateAsync(); 
 
-        User = provider.User;
+        User = provider.User; 
 
         UserId = User.Claims.First(x => x.Type.Contains(ClaimTypes.nameidentifier.ToString())).Value;
-        await _service.GetNotes(UserId);
-        searchResults = _service.Notes;
+
+        await _service.GetNotes(UserId); 
+        searchResults = _service.Notes; 
     }
 
     private async Task DeleteItem(long id)
     {
-        var note = _service.Notes.Where(x => x.Id == id).First();
-        await _service.DeleteNote(id);
+        var note = _service.Notes.Where(x => x.Id == id).First(); 
+        await _service.DeleteNote(id);   
         _service.Notes.Remove(note);
     }
 
